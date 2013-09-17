@@ -1,7 +1,7 @@
 <h1>Login Template</h1>
 
 <% if current_user %>
-  <%= current_user.name %>
+  Welcome <%= current_user.name %> <%= link_to "Logout", "/logout" %>
 <% else %>
   <%= link_to "Twitter Login", "/auth/twitter" %>
   <%= link_to "Facebook Login", "/auth/facebook" %>

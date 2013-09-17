@@ -26,11 +26,17 @@ describe "OAuth" do
       end
 
       context "when Success" do
-        before do 
-          visit "/auth/twitter"
-        end
+        before { visit "/auth/twitter" }
 
-        it { should have_content(@user.name) }
+        it { should have_content("Welcome " + @user.name) }
+        it { should have_link("Logout") }
+
+        describe "Logout" do
+          before { click_link "Logout" }
+
+          it { should have_link("Twitter Login") }
+          it { should have_link("Facebook Login") }
+        end
       end
     end
 
@@ -46,13 +52,18 @@ describe "OAuth" do
       end
 
       context "when Success" do
-          before do 
-            visit "/auth/facebook"
-          end
+        before { visit "/auth/facebook" }
 
-          it { should have_content(@user.name) }
+        it { should have_content("Welcome " + @user.name) }
+        it { should have_link("Logout") }
+
+        describe "Logout" do
+          before { click_link "Logout" }
+
+          it { should have_link("Twitter Login") }
+          it { should have_link("Facebook Login") }
+        end
       end
     end
   end
-
 end
