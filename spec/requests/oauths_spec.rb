@@ -3,11 +3,22 @@ require 'spec_helper'
 describe "OAuth" do
 
   subject { page }
-  
+
   describe "Login" do
+    
+    shared_examples "welcome" do
+      it { should have_content("Welcome " + user.name) }
+      it { should have_link("Logout") }
+    end
+
+    shared_examples "login link" do
+      it { should have_link("Twitter Login") }
+      it { should have_link("Facebook Login") }
+    end
+
+    let(:user) { FactoryGirl.create(:user) }
     before do
       OmniAuth.config.test_mode = true
-      @user = FactoryGirl.create(:user)
     end
 
     after do
@@ -16,52 +27,36 @@ describe "OAuth" do
 
     describe "Twitter" do
       before do
-        OmniAuth.config.mock_auth[:twitter] = {
-          "uid" => @user.uid,
-          "provider" => "twitter",
-          "info" => {
-            "name" => @user.name
-          }
-        }
+        create_oauth_user(:twitter, user)
       end
 
       context "when Success" do
         before { visit "/auth/twitter" }
 
-        it { should have_content("Welcome " + @user.name) }
-        it { should have_link("Logout") }
+        include_examples "welcome"
 
         describe "Logout" do
           before { click_link "Logout" }
 
-          it { should have_link("Twitter Login") }
-          it { should have_link("Facebook Login") }
+          include_examples "login link"
         end
       end
     end
 
     describe "Facebook" do
       before do
-        OmniAuth.config.mock_auth[:facebook] = {
-          "uid" => @user.uid,
-          "provider" => "facebook",
-          "info" => {
-            "name" => @user.name
-          }
-        }
+        create_oauth_user(:facebook, user)
       end
 
       context "when Success" do
         before { visit "/auth/facebook" }
 
-        it { should have_content("Welcome " + @user.name) }
-        it { should have_link("Logout") }
+        include_examples "welcome"
 
         describe "Logout" do
           before { click_link "Logout" }
 
-          it { should have_link("Twitter Login") }
-          it { should have_link("Facebook Login") }
+          include_examples "login link"
         end
       end
     end
