@@ -25,6 +25,12 @@ describe "OAuth" do
       OmniAuth.config.test_mode = false
     end
 
+    describe "Cancel" do
+      before { visit "/auth/failure" }
+
+      include_examples "login link"
+    end
+
     describe "Twitter" do
       before do
         create_oauth_user(:twitter, user)
